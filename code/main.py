@@ -71,16 +71,67 @@ def s1AMano():
 @cy.event.receive("s1Brazo")
 def s1Brazo():
     m.servo_set(50, brazo)
-    time.sleep(0.2)
-    m.servo_set(150, mano)
+    time.sleep(0.5)
+    m.servo_set(150, brazo)
+    
+@cy.event.receive("s1BIterativo")
+def s1BIterativo():
+    contador = 0
+    while (4 > contador):
+        m.servo_set(50, brazo)
+
+        time.sleep(0.5)
+        m.servo_set(140, brazo)
+        contador+=1
+
+        time.sleep(0.3)
+
+@cy.event.receive("s1Oscilacion")
+def s1Oscilacion():
+    contador = 0
+    while (2 > contador):
+        m.drive_power(-vMotor/2, -vMotor/2)
+        time.sleep(1)
+        m.drive_power(vMotor/2, vMotor/2)
+        time.sleep(1)
+        contador+=1
+    m.drive_power(-vMotor/2, -vMotor/2)
+    time.sleep(0.5)
+    m.drive_power(0, 0)
+    
 
 def s1TomaLapiz():
     cy.broadcast("s1AMano") 
-    while (cy.ultrasonic2.get() != 300):
-        cy.console.println(cy.ultrasonic2.get())
-        m.drive_power(vMotor, -vMotor)
+    while (cy.ultrasonic2.get() >= 7 or cy.ultrasonic2.get() == 300):
+        m.drive_power(vMotorGiro, -vMotorGiro)
+
     m.drive_power(0, 0)
     m.servo_set(150, mano)
+    
+import time
+
+def s1Girar(direccion="izquierda", tiempo=1):
+    """
+    Gira el motor en la dirección especificada durante el tiempo especificado.
+
+    Parámetros:
+    direccion (str): La dirección del giro, puede ser "izquierda" o "derecha". Por defecto es "izquierda".
+    tiempo (int o float): El tiempo en segundos que el motor girará. Por defecto es 1 segundo.
+    """
+    
+    if direccion == "izquierda":
+        m.drive_power(-vMotor*2, -vMotor*2)
+    elif direccion == "derecha":
+        m.drive_power(vMotor*2, vMotor*2)
+    else:
+        raise ValueError("La dirección debe ser 'izquierda' o 'derecha'.")
+
+    time.sleep(tiempo)
+    m.drive_power(0, 0)
+
+def s1Pizarra():
+    cy.broadcast("s1BIterativo")
+    cy.broadcast("s1Oscilacion")
 
 @cy.event.is_press("a")
 def main():
@@ -95,9 +146,12 @@ def main():
         sLinea()
     
     s1TomaLapiz()
+    s1Girar(direccion="izquierda", tiempo=1)
+    s1Pizarra()
+    
+    time.sleep(5)
 
-    
-    
- # cy.broadcast("subir_cuello_async")  
- # @cy.event.receive("subir_cuello_async")
+    s1Girar(direccion="derecha", tiempo=1)
+    sLinea()
+
     

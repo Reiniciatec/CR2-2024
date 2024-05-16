@@ -94,9 +94,6 @@ def s1Oscilacion():
         time.sleep(1)
         m.drive_power(vMotor/2, vMotor/2)
         time.sleep(1)
-
-
-
         contador+=1
     m.drive_power(-vMotor/2, -vMotor/2)
     time.sleep(0.5)
@@ -106,9 +103,8 @@ def s1Oscilacion():
 def s1TomaLapiz():
     cy.broadcast("s1AMano") 
     while (cy.ultrasonic2.get() >= 7 or cy.ultrasonic2.get() == 300):
-        cy.console.println(cy.ultrasonic2.get())
-        m.drive_power(vMotor/2, -vMotor/2)
-        time.sleep(0.1)
+        m.drive_power(vMotorGiro, -vMotorGiro)
+
     m.drive_power(0, 0)
     m.servo_set(150, mano)
     

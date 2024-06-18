@@ -21,7 +21,7 @@ def execute_until(task, condition):
             break
         time.sleep(0.1)  # Añadir un pequeño retraso para evitar un bucle muy rápido
 
-def detect_color(color, sensor_index=1):
+def detect_color(color, sensor_index=1) -> bool:
     """
     Detecta si un color específico está presente usando el sensor de color.
     
@@ -103,14 +103,14 @@ def eureka_emotion():
             
 def ePizarra():
     m.servo_set(150, mano)
-    t_espera = 1
+    t_espera = 0.5
     ct_espera = 3
     for i in range(2):
         # Subir brazo
         m.servo_set(30, brazo)
         time.sleep(t_espera)
         
-        moverServoDespacio(servo=mano, inicio=150, fin=30, paso=10, tiempo=0.1)
+        moverServoDespacio(servo=mano, inicio=100, fin=30, paso=10, tiempo=0.1)
         time.sleep(t_espera)
         
         # Bajar brazo
@@ -184,21 +184,42 @@ def eureka():
     cy.broadcast("eureka_emotions")
     time.sleep(3)
     
+    # Bajar la luz
+    m.servo_set(150, brazo)
     
-    m.drive_power(0, -50)
-    time.sleep(1.4)
-    m.drive_power(0, 0)
-    
-
-    time.sleep(2000)
-    
-    m.drive_power(25, -20)
+    # Retroceder brevemente
+    m.drive_power(-20, 20)
     time.sleep(1)
     m.drive_power(0, 0)
+    
+    
+    m.drive_power(0, -60)
+    time.sleep(1)
+    # m.drive_power(0, 0)
+   
+
+    # Avanzar 
+    m.drive_power(45, -40)
+    time.sleep(0.5)
+        
+
+    m.drive_power(0, 0)
+    
+    time.sleep(2000)
+    
+    
+    # Giro para depositar la ampolleta
+    m.drive_power(100, 0)
+    time.sleep(0.2)
+    m.drive_power(0, 0)
+    
+    time.sleep(2000)
     
     m.servo_release(brazo)
     time.sleep(1)
     m.servo_set(30, mano)
+    
+    
     
 def tPlumon():
     # Retrocedor
@@ -274,6 +295,7 @@ def debug():
     """
     Inicia la funcion para debuggear caracteristicas en especifico del programa
     """
+    m.drive_power(0, -60)
 
     # tPlumon()
     # # eureka()

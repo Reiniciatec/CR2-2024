@@ -3,7 +3,7 @@ from cyberpi import mbot2 as m
 import time
 
 # Variables globales
-vMotor = 30
+vMotor = 40
 vMotorGiro = 6
 brazo = 2
 mano = 1
@@ -120,6 +120,19 @@ def ePizarra():
         m.servo_set(150, mano)
     
         time.sleep(t_espera*ct_espera)
+        
+def ePizarraConPlumon():
+
+    t_espera = 0.5
+
+    for i in range(2):
+        # Subir brazo
+        m.servo_set(30, brazo)
+        time.sleep(t_espera)
+        
+        # Bajar brazo
+        m.servo_set(150, brazo)
+        time.sleep(t_espera)
 
 def eEuphoria():
     # Impacto (Llega la idea)
@@ -141,8 +154,8 @@ def eureka():
     eEuphoria()
     
     # Girar hacia la pizarra
-    m.drive_power(0, -45)
-    time.sleep(0.7)    
+    m.drive_power(0, -50)
+    time.sleep(0.6)    
     m.drive_power(0, 0)
     
     time.sleep(1)
@@ -150,94 +163,103 @@ def eureka():
     # Observar la pizarra
     ePizarra()
     
-
     # Retroceder hasta estar preparado para tomar la luz
     m.drive_power(-60, 80)
     time.sleep(0.6)
     m.drive_power(0, 0)
     
+    time.sleep(0.2)
+    
    
     # Acercarse a tomar la luz
     m.servo_set(30, mano)
-    while (cy.ultrasonic2.get(1) >= 6.5):
-        m.drive_power(25, -20)
+    while (cy.ultrasonic2.get(1) >= 5):
+        m.drive_power(30, -30)
     
-    m.drive_power(25, -20)    
-    time.sleep(0.2)
-    m.drive_power(0, 0)
+    time.sleep(0.15)
     
+    m.drive_power(0,0)
     
     # Tomar la luz
     m.servo_set(120, mano)
     cy.audio.play("start")
     time.sleep(0.5)
     
+    m.drive_power(20, 20)
+    time.sleep(0.4)
+    m.drive_power(0,0)
+    
     # Alzar la luz
-    m.servo_set(30, brazo)
-    
-    
-    
-    m.drive_power(-50, 50)
-    time.sleep(0.2)
-    m.drive_power(0, 0)
+    m.servo_set(40, brazo)
     
     cy.broadcast("eureka_emotions")
-    time.sleep(3)
+    time.sleep(2)
     
     # Bajar la luz
     m.servo_set(150, brazo)
     
-    # Retroceder brevemente
-    m.drive_power(-20, 20)
-    time.sleep(1)
+    # Darce la vuelta para poder ir a dejar la ampolleta
+    m.drive_power(80, 80)
+    time.sleep(0.7)
     m.drive_power(0, 0)
     
     
-    m.drive_power(0, -60)
-    time.sleep(1)
-    # m.drive_power(0, 0)
-   
 
-    # Avanzar 
-    m.drive_power(45, -40)
-    time.sleep(0.5)
-        
-
+    # Avanzar brevemente para depositar la luz
+    m.drive_power(40, -35)
+    time.sleep(0.7)
     m.drive_power(0, 0)
     
-    time.sleep(2000)
-    
-    
-    # Giro para depositar la ampolleta
-    m.drive_power(100, 0)
-    time.sleep(0.2)
-    m.drive_power(0, 0)
-    
-    time.sleep(2000)
-    
-    m.servo_release(brazo)
-    time.sleep(1)
     m.servo_set(30, mano)
     
     
     
 def tPlumon():
-    # Retrocedor
-    m.drive_power(-50, 60)
-    time.sleep(0.2) # Posicion frente al plumon
-    while (cy.ultrasonic2.get(1) >= 25):
-        m.drive_power(-50, 60)
-
+    # Abrir mano y tomar plumon
+    m.servo_set(30, mano)
+    
+    m.drive_power(40, 60)
+    time.sleep(0.2)
     m.drive_power(0, 0)
     
-    # Abrir mano y tomar plumon
-    m.servo_set(70, brazo)
-    m.servo_set(50, mano)
+    m.drive_power(20, -20)
+    time.sleep(1)
+    m.drive_power(0, 0)
     
-    # Ponerse frente a la pizarra
+    m.servo_set(80, brazo)
     
-    pass
-    # Termina
+    time.sleep(0.1)
+    m.servo_set(150, mano)
+    
+    time.sleep(0.1)
+    
+    m.servo_set(30, brazo)
+    
+def rPizarra():
+    # Girar hacia la pizzara
+    m.drive_power(-40,20)
+    time.sleep(0.05)
+    
+    # avanzar hacia la pizarra
+    m.drive_power(40,40)
+    time.sleep(0.4)
+    m.drive_power(0,0)
+    
+    m.drive_power(40,-40)
+    time.sleep(0.3)
+    m.drive_power(0,0)
+    
+    ePizarraConPlumon()
+    
+    m.drive_power(50,50)
+    time.sleep(0.5)
+    m.drive_power(0,0)
+    
+    m.drive_power(30,-30)
+    time.sleep(1)
+    m.drive_power(0,0)
+    
+
 
 def eAvanzar(velocidad: int, tiempo: float):
     m.drive_power(velocidad, -velocidad)
@@ -258,9 +280,6 @@ def ideacion():
     cy.broadcast("pensamiento")
     s1PosicionInicial()
 
-    
-
-    pass
         
 def main():
     """
@@ -269,12 +288,17 @@ def main():
     
     # s1PosicionInicial()
     # ideacion()
-    eAvanzar(velocidad=40, tiempo=0.6)
+    # eAvanzar(velocidad=40, tiempo=0.6)
     
     # Seguir la línea hasta detectar el color azul
     execute_until(task=line_follower, condition=lambda: detect_color("blue"))
     m.drive_power(0, 0)
+    
     eureka()
+    
+    tPlumon()
+    
+    rPizarra()
     
 def s1PosicionInicial():
     """

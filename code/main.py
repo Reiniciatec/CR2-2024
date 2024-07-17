@@ -149,46 +149,54 @@ def eEuphoria():
     m.servo_set(150, brazo)
 
 
+def rTakeLight():
+    m.drive_power(-0, 90)
+    time.sleep(0.2)
+    
+    m.drive_power(-60, 60)
+    time.sleep(0.6)
+    
+    m.drive_power(-0, 90)
+    time.sleep(0.084)
+    
+    m.drive_power(0, 0)
+
 def eureka():
     # Impacto de su maravillosa idea
     eEuphoria()
     
     # Girar hacia la pizarra
-    m.drive_power(0, -50)
-    time.sleep(0.6)    
+    m.drive_power(-15, -50)
+    time.sleep(0.5)    
     m.drive_power(0, 0)
     
     time.sleep(1)
     
     # Observar la pizarra
+    
     ePizarra()
     
     # Retroceder hasta estar preparado para tomar la luz
-    m.drive_power(-60, 80)
-    time.sleep(0.6)
-    m.drive_power(0, 0)
-    
-    time.sleep(0.2)
-    
+    rTakeLight()
    
     # Acercarse a tomar la luz
     m.servo_set(30, mano)
-    while (cy.ultrasonic2.get(1) >= 5):
+    
+    while (cy.ultrasonic2.get(1) >= 8):
         m.drive_power(30, -30)
+    m.drive_power(0,0)
     
-    time.sleep(0.15)
-    
+    # Acercarse levemente a tomar la luz
+    m.drive_power(10,-10)
+    time.sleep(1)
     m.drive_power(0,0)
     
     # Tomar la luz
-    m.servo_set(120, mano)
+    m.servo_set(130, mano)
     cy.audio.play("start")
+    
     time.sleep(0.5)
-    
-    m.drive_power(20, 20)
-    time.sleep(0.4)
-    m.drive_power(0,0)
-    
+
     # Alzar la luz
     m.servo_set(40, brazo)
     
@@ -200,14 +208,12 @@ def eureka():
     
     # Darce la vuelta para poder ir a dejar la ampolleta
     m.drive_power(80, 80)
-    time.sleep(0.7)
+    time.sleep(0.73)
     m.drive_power(0, 0)
-    
-    
 
     # Avanzar brevemente para depositar la luz
-    m.drive_power(40, -35)
-    time.sleep(0.7)
+    m.drive_power(30, -30)
+    time.sleep(1.1)
     m.drive_power(0, 0)
     
     m.servo_set(30, mano)
@@ -218,45 +224,68 @@ def tPlumon():
     # Abrir mano y tomar plumon
     m.servo_set(30, mano)
     
-    m.drive_power(40, 60)
-    time.sleep(0.2)
+    # Retroceder para evitar impacto directo con el plumon
+    m.drive_power(-20, 20)
+    
+    time.sleep(0.5)
+    
+    # Girar para estar en angulo con el plumon
+    m.drive_power(20,20)
+    time.sleep(0.5)
     m.drive_power(0, 0)
     
-    m.drive_power(20, -20)
-    time.sleep(1)
-    m.drive_power(0, 0)
-    
+        
+    # Subir el brazo para tomar la parte gruesa
     m.servo_set(80, brazo)
     
-    time.sleep(0.1)
+    # Adelantarse a tomarlo
+    m.drive_power(20, -20)
+    time.sleep(0.7)
+    m.drive_power(0, 0)
+
+    # Tomar el plumon
+    time.sleep(1)
     m.servo_set(150, mano)
     
-    time.sleep(0.1)
+    time.sleep(0.2)
     
-    m.servo_set(30, brazo)
+    
+    # Subir el brazo para sacar el plumon de la base
+    m.servo_set(20, brazo)
+    
+    time.sleep(0.2)
+    
+    # Retroceder
+    m.drive_power(-20, 20)
+    
+    time.sleep(1.5)
+    
+    # Girar para estar perpendicular a la pizarra
+    m.drive_power(20,20)
+    time.sleep(0.55)
+    m.drive_power(0, 0)
+    
+
+    
     
 def rPizarra():
+    
+    # Avanzar levemente
+    m.drive_power(20,-20)
+    
+    time.sleep(2)
+    
     # Girar hacia la pizzara
-    m.drive_power(-40,20)
-    time.sleep(0.05)
+    m.drive_power(-20,-40)
+    time.sleep(0.5)
     
-    # avanzar hacia la pizarra
-    m.drive_power(40,40)
-    time.sleep(0.4)
     m.drive_power(0,0)
-    
-    m.drive_power(40,-40)
-    time.sleep(0.3)
-    m.drive_power(0,0)
-    
+
+    ePizarraConPlumon()
     ePizarraConPlumon()
     
-    m.drive_power(50,50)
-    time.sleep(0.5)
-    m.drive_power(0,0)
-    
-    m.drive_power(30,-30)
-    time.sleep(1)
+    m.drive_power(-20, 60)
+    time.sleep(0.55)
     m.drive_power(0,0)
     
 
@@ -286,9 +315,9 @@ def main():
     Función principal que usa execute_until para seguir la línea hasta que se detecte un color específico.
     """
     
-    # s1PosicionInicial()
-    # ideacion()
-    # eAvanzar(velocidad=40, tiempo=0.6)
+    s1PosicionInicial()
+    ideacion()
+    eAvanzar(velocidad=40, tiempo=0.4)
     
     # Seguir la línea hasta detectar el color azul
     execute_until(task=line_follower, condition=lambda: detect_color("blue"))
@@ -319,11 +348,19 @@ def debug():
     """
     Inicia la funcion para debuggear caracteristicas en especifico del programa
     """
-    m.drive_power(0, -60)
 
     # tPlumon()
     # # eureka()
     # cy.console.println(cy.ultrasonic2.get(1))
+    
+@cy.event.is_press("up")
+def debu2g():
+    """
+    Inicia la funcion para debuggear caracteristicas en especifico del programa
+    """
+    while True:
+     cy.console.println(cy.ultrasonic2.get(1))
+
   
     
 # Comienza el programa

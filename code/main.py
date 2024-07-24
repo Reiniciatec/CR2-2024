@@ -208,12 +208,12 @@ def eureka():
     
     # Darce la vuelta para poder ir a dejar la ampolleta
     m.drive_power(80, 80)
-    time.sleep(0.73)
+    time.sleep(0.75)
     m.drive_power(0, 0)
 
     # Avanzar brevemente para depositar la luz
     m.drive_power(30, -30)
-    time.sleep(1.1)
+    time.sleep(1.3)
     m.drive_power(0, 0)
     
     m.servo_set(30, mano)
@@ -227,7 +227,7 @@ def tPlumon():
     # Retroceder para evitar impacto directo con el plumon
     m.drive_power(-20, 20)
     
-    time.sleep(0.5)
+    time.sleep(0.9)
     
     # Girar para estar en angulo con el plumon
     m.drive_power(20,20)
@@ -285,7 +285,7 @@ def rPizarra():
     ePizarraConPlumon()
     
     m.drive_power(-20, 60)
-    time.sleep(0.55)
+    time.sleep(0.5)
     m.drive_power(0,0)
     
 
